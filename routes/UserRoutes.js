@@ -30,11 +30,11 @@ router.post("/login", async (req,res)=> {
 
     const user = new User(req.body.user);
     const data = await User.findOne({username : user.username}).exec()
-    console.log(data);
+    
     if(data !== null && bcrypt.compare(user.password,data.password)){
 
         const tokenData = {username : data.username,id : data._id}
-        const token = jwt.sign(tokenData,"secret",{expiresIn : "10m"})
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET || "secret",{expiresIn : "15M"})
 
         res.status(200).json({message : "Logged in Successfully",jwt : token});
     }else{ 
